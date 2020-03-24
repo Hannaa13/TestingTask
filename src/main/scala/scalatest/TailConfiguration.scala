@@ -4,7 +4,6 @@ trait TailConfiguration {
 
   def tail: Tail
 }
-
 class TailConfigurationImpl() extends TailConfiguration {
 
   override def tail: Tail = defaultTail
