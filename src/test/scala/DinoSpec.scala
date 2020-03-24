@@ -4,9 +4,7 @@ import org.scalatest.Suite
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scalatest._
-
-import scala.concurrent.Future
-
+import utils.FakeDino
 
 class DinoSpec extends AnyFlatSpec with Matchers with Suite with ScalaFutures with MockFactory {
 
@@ -21,21 +19,25 @@ class DinoSpec extends AnyFlatSpec with Matchers with Suite with ScalaFutures wi
 
   "sumCurring" should "считать сумму трех значений" in new TestWiring {
     testDino.sumCurring(1)(2)(3) shouldBe 6
-
   }
 
   "showMeYourTail" should "возвращать значение tail у динозавра" in new TestWiring {
     (mockTailConfiguration.tail _)
       .expects()
       .returns(testTail)
+
     whenReady(testDino.showMeYourTail()) { res =>
       res shouldBe testTail
     }
   }
 
   "motherName" should "возвращать Option имени мамы динозавра в UpperCase" in new TestWiring {
+    (mockTestMother.nameUpper _)
+      .expects()
+      .returns("ИМЯ")
+
     whenReady(testDino.motherName()) { res =>
-      res shouldBe Some("MOTHER")
+      res shouldBe Some("ИМЯ")
     }
   }
 
@@ -46,17 +48,19 @@ class DinoSpec extends AnyFlatSpec with Matchers with Suite with ScalaFutures wi
   }
 
   it should "выдавать ошибку: отрицательное число" in new TestWiring {
-    whenReady(testDino.copeName(-2).failed) { res =>
-      res.isInstanceOf[CountLessThenZiroException]
+    whenReady(testDino.copeName(-2).failed) {
+      case e:CountLessThenZiroException =>  e.getMessage shouldBe CountLessThenZiroException.deffaultMsg
     }
   }
 
   private class TestWiring {
-    implicit val ec = scala.concurrent.ExecutionContext.global
-    val mockTailConfiguration = mock[TailConfigurationImpl]
+    private implicit val ec = scala.concurrent.ExecutionContext.global
+
+    val mockTailConfiguration = mock[TailConfiguration]
+    val mockTestMother = mock[FakeDino]
+
+    val testDino = new DinoImpl("dino", Some(mockTestMother), mockTailConfiguration)
     val testTail = Tail("Value1", "Value2", 777)
-    val mockTestMother = mock[DinoImpl]
-    val testDino = new DinoImpl("dino", Option(mockTestMother), mockTailConfiguration)
   }
 
 }

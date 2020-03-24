@@ -31,7 +31,7 @@ class DinoImpl(val name: String,
   override def copeName(count: Int): Future[String] = {
     if (count > 0) {
       Future.successful(1.to(count).map(_ => name).mkString(","))
-    } else Future.failed(new CountLessThenZiroException("Чет меньше 0. Аяяй!"))
+    } else Future.failed(new CountLessThenZiroException(CountLessThenZiroException.deffaultMsg))
   }
 
   override def motherName(): Future[Option[String]] = Future(dinoMother.map(_.nameUpper()))
