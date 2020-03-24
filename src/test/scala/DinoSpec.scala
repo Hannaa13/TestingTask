@@ -41,6 +41,10 @@ class DinoSpec extends AnyFlatSpec with Matchers with Suite with ScalaFutures wi
     }
   }
 
+  "nameUpper" should "возвращать Option имени динозавра в UpperCase" in new TestWiring {
+    testDino.nameUpper() shouldBe "DINO"
+  }
+
   "copeName" should "написать имя динозавра через запятую count-раз" in new TestWiring {
     whenReady(testDino.copeName(2)) { res =>
       res shouldBe "dino,dino"
