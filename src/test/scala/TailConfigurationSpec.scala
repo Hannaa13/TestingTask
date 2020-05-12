@@ -11,7 +11,9 @@ class TailConfigurationSpec extends AnyFlatSpec with Matchers with Suite{
 
     tailConfiguration.tail shouldBe testdefaultTail
   }
-
+"test test" should "true" in  {
+  1 shouldBe 1
+}
   private class TestWiring {
     val tailConfiguration = new TailConfigurationImpl()
   }
