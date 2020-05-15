@@ -15,5 +15,4 @@ class TailConfigurationSpec extends AnyFlatSpec with Matchers with Suite{
   private class TestWiring {
     val tailConfiguration = new TailConfigurationImpl()
   }
-
 }
